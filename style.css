@@ -1,0 +1,32 @@
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* When not authenticated, hide all .role-logged-in elements */
+body.not-authenticated .role-logged-in {
+    display: none !important;
+}
+
+/* When authenticated, hide all .role-logged-out elements */
+body.authenticated .role-logged-out {
+    display: none !important;
+}
+
+/* By default, hide admin elements */
+.role-admin {
+    display: none !important;
+}
+
+/* When admin, show them */
+body.is-admin .role-admin {
+    display: block !important;  /* or inline-block/flex depending on context */
+}
+
+/* For navbar items, we need to handle li elements */
+body.is-admin .role-admin.nav-item {
+    display: block;
+}
