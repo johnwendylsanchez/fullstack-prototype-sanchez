@@ -4,151 +4,450 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Full-Stack App (Student Build)</title>
+    
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Your custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="not-authenticated">
-    <!-- All content will go here -->
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#/">Full-Stack App (Your Full Name)</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" id="navLinks">
+                    <!-- Links will be dynamically populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Bootstrap JS Bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Your custom JS -->
+    <!-- Main Content Area with Page Sections -->
+    <main class="container mt-4">
+        <!-- Home Page -->
+        <section id="home-page" class="page">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Welcome to the Full-Stack Prototype</h1>
+                    <p class="lead">This is a student build demonstrating a full-stack application structure with client-side routing.</p>
+                    
+                    <!-- Demo Controls Card (only visible when logged out) -->
+                    <div class="card mt-4 role-logged-out">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Demo Controls</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Use these buttons to test different user roles:</p>
+                            <button class="btn btn-primary" onclick="setUserRole('user', 'john_doe', 'john@example.com')">Login as Regular User</button>
+                            <button class="btn btn-warning" onclick="setUserRole('admin', 'admin_user', 'admin@example.com')">Login as Admin</button>
+                        </div>
+                    </div>
+                    
+                    <!-- User Info Card (only visible when logged in) -->
+                    <div class="card mt-4 role-logged-in">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Welcome Back!</h5>
+                        </div>
+                        <div class="card-body">
+                            <p id="welcome-message">You are logged in.</p>
+                            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                        </div>
+                    </div>
+
+                    <!-- Current Route Info -->
+                    <div class="card mt-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">Routing Demo</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Current route: <code id="current-route">#/</code></p>
+                            <p>Try typing these routes in the URL:</p>
+                            <ul>
+                                <li><code>#/</code> - Home</li>
+                                <li><code>#/register</code> - Register</li>
+                                <li><code>#/verify-email</code> - Verify Email</li>
+                                <li><code>#/login</code> - Login</li>
+                                <li><code>#/profile</code> - Profile (requires login)</li>
+                                <li><code>#/requests</code> - My Requests (requires login)</li>
+                                <li><code>#/employees</code> - Employees (admin only)</li>
+                                <li><code>#/departments</code> - Departments (admin only)</li>
+                                <li><code>#/accounts</code> - Accounts (admin only)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Register Page -->
+        <section id="register-page" class="page">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Register</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="register-form" onsubmit="handleRegister(event)">
+                                <div class="mb-3">
+                                    <label for="register-name" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="register-name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="register-email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="register-email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="register-password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="register-password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="register-confirm-password" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="register-confirm-password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Register</button>
+                            </form>
+                            <div class="mt-3 text-center">
+                                <p>Already have an account? <a href="#/login">Login here</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verify Email Page -->
+        <section id="verify-email-page" class="page">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h4 class="mb-0">Verify Your Email</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <i class="bi bi-envelope-check" style="font-size: 4rem; color: #0dcaf0;"></i>
+                            <h5 class="mt-3">Check your inbox</h5>
+                            <p>We've sent a verification link to your email address. Please click the link to verify your account.</p>
+                            <div class="mt-4">
+                                <p class="text-muted">Didn't receive the email?</p>
+                                <button class="btn btn-outline-info" onclick="resendVerification()">Resend Verification Email</button>
+                            </div>
+                            <div class="mt-3">
+                                <a href="#/login">Return to Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login-page" class="page">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Login</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="login-form" onsubmit="handleLogin(event)">
+                                <div class="mb-3">
+                                    <label for="login-email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="login-email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="login-password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="login-password" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="remember-me">
+                                    <label class="form-check-label" for="remember-me">Remember me</label>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Login</button>
+                            </form>
+                            <div class="mt-3 text-center">
+                                <p>Don't have an account? <a href="#/register">Register here</a></p>
+                                <p><a href="#" onclick="showForgotPassword()">Forgot Password?</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profile-page" class="page">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Profile Picture</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <i class="bi bi-person-circle" style="font-size: 8rem;"></i>
+                            <h5 id="profile-name" class="mt-3">John Doe</h5>
+                            <p id="profile-email" class="text-muted">john.doe@example.com</p>
+                            <p><span class="badge bg-info" id="profile-role">User</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Profile Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="profile-form" onsubmit="handleProfileUpdate(event)">
+                                <div class="mb-3">
+                                    <label for="profile-fullname" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="profile-fullname" value="John Doe">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profile-email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="profile-email-input" value="john.doe@example.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profile-phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="profile-phone" value="(555) 123-4567">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profile-department" class="form-label">Department</label>
+                                    <input type="text" class="form-control" id="profile-department" value="Engineering" readonly>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Employees Page (Admin Only) -->
+        <section id="employees-page" class="page role-admin">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h4 class="mb-0">Employees Management</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <button class="btn btn-primary" onclick="addNewEmployee()">+ Add New Employee</button>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Role</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="employees-table-body">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>John Doe</td>
+                                        <td>john.doe@example.com</td>
+                                        <td>Engineering</td>
+                                        <td>Developer</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Jane Smith</td>
+                                        <td>jane.smith@example.com</td>
+                                        <td>Marketing</td>
+                                        <td>Manager</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Departments Page (Admin Only) -->
+        <section id="departments-page" class="page role-admin">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h4 class="mb-0">Departments Management</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <button class="btn btn-primary" onclick="addNewDepartment()">+ Add New Department</button>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Department Name</th>
+                                        <th>Manager</th>
+                                        <th>Employee Count</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="departments-table-body">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Engineering</td>
+                                        <td>John Doe</td>
+                                        <td>15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Marketing</td>
+                                        <td>Jane Smith</td>
+                                        <td>8</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accounts Page (Admin Only) -->
+        <section id="accounts-page" class="page role-admin">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h4 class="mb-0">Accounts Management</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <button class="btn btn-primary" onclick="addNewAccount()">+ Create New Account</button>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accounts-table-body">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>john_doe</td>
+                                        <td>john.doe@example.com</td>
+                                        <td>User</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">Edit</button>
+                                            <button class="btn btn-sm btn-warning">Suspend</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>admin_user</td>
+                                        <td>admin@example.com</td>
+                                        <td>Admin</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">Edit</button>
+                                            <button class="btn btn-sm btn-warning">Suspend</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requests Page -->
+        <section id="requests-page" class="page">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h4 class="mb-0">My Requests</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <button class="btn btn-primary" onclick="createNewRequest()">+ Create New Request</button>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Created Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requests-table-body">
+                                    <tr>
+                                        <td>REQ001</td>
+                                        <td>New Laptop Request</td>
+                                        <td>Equipment</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>2024-01-15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">View</button>
+                                            <button class="btn btn-sm btn-danger">Cancel</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REQ002</td>
+                                        <td>Vacation Time Off</td>
+                                        <td>Time Off</td>
+                                        <td><span class="badge bg-success">Approved</span></td>
+                                        <td>2024-02-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info">View</button>
+                                            <button class="btn btn-sm btn-danger">Cancel</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Full-Stack App (Your Full Name)</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <!-- Logged-out links (visible when not authenticated) -->
-                <li class="nav-item role-logged-out">
-                    <a class="nav-link" href="#/login">Login</a>
-                </li>
-                <li class="nav-item role-logged-out">
-                    <a class="nav-link" href="#/register">Register</a>
-                </li>
-
-                <!-- Logged-in dropdown (visible when authenticated) -->
-                <li class="nav-item dropdown role-logged-in">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                        <span id="username-placeholder">User</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#/profile">Profile</a></li>
-                        <li><a class="dropdown-item" href="#/requests">My Requests</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" id="logout-link">Logout</a></li>
-                    </ul>
-                </li>
-
-                <!-- Admin-only links (visible only to admin) -->
-                <li class="nav-item role-admin">
-                    <a class="nav-link" href="#/employees">Employees</a>
-                </li>
-                <li class="nav-item role-admin">
-                    <a class="nav-link" href="#/accounts">Accounts</a>
-                </li>
-                <li class="nav-item role-admin">
-                    <a class="nav-link" href="#/departments">Departments</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<main class="container mt-4">
-    <!-- Home page -->
-    <section id="home-page" class="page active">
-        <h1>Welcome to the Full-Stack Prototype</h1>
-        <p>This is a client‑side SPA that simulates a real full‑stack app.</p>
-    </section>
-
-    <!-- Register page -->
-    <section id="register-page" class="page">
-        <h2>Register</h2>
-        <form id="register-form">
-            <div class="mb-3">
-                <label for="reg-firstname" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="reg-firstname" required>
-            </div>
-            <div class="mb-3">
-                <label for="reg-lastname" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="reg-lastname" required>
-            </div>
-            <div class="mb-3">
-                <label for="reg-email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="reg-email" required>
-            </div>
-            <div class="mb-3">
-                <label for="reg-password" class="form-label">Password (min 6 characters)</label>
-                <input type="password" class="form-control" id="reg-password" minlength="6" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-    </section>
-
-    <!-- Verify Email page -->
-    <section id="verify-page" class="page">
-        <h2>Verify Your Email</h2>
-        <p>We sent a verification email to <span id="verify-email-display"></span>.</p>
-        <button id="simulate-verify" class="btn btn-success">✅ Simulate Email Verification</button>
-    </section>
-
-    <!-- Login page -->
-    <section id="login-page" class="page">
-        <h2>Login</h2>
-        <form id="login-form">
-            <div class="mb-3">
-                <label for="login-email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="login-email" required>
-            </div>
-            <div class="mb-3">
-                <label for="login-password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="login-password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-    </section>
-
-    <!-- Profile page -->
-    <section id="profile-page" class="page">
-        <h2>Profile</h2>
-        <div id="profile-info"></div>
-        <button class="btn btn-secondary" id="edit-profile-btn">Edit Profile (alert)</button>
-    </section>
-
-    <!-- Employees page (admin) -->
-    <section id="employees-page" class="page">
-        <h2>Employees</h2>
-        <button class="btn btn-primary mb-3" id="add-employee-btn">+ Add Employee</button>
-        <div id="employees-table-container"></div>
-    </section>
-
-    <!-- Accounts page (admin) -->
-    <section id="accounts-page" class="page">
-        <h2>Accounts</h2>
-        <button class="btn btn-primary mb-3" id="add-account-btn">+ Add Account</button>
-        <div id="accounts-table-container"></div>
-    </section>
-
-    <!-- Departments page (admin) -->
-    <section id="departments-page" class="page">
-        <h2>Departments</h2>
-        <button class="btn btn-primary mb-3" id="add-department-btn">+ Add Department</button>
-        <div id="departments-table-container"></div>
-    </section>
-
-    <!-- Requests page -->
-    <section id="requests-page" class="page">
-        <h2>My Requests</h2>
-        <button class="btn btn-primary mb-3" id="new-request-btn">+ New Request</button>
-        <div id="requests-table-container"></div>
-    </section>
-</main>
